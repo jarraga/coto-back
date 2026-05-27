@@ -1,15 +1,34 @@
 package sales
 
 type Service struct {
-	store *Store
+	store    *Store
+	seedFunc func() []Sale
 }
 
-func NewService(store *Store) *Service {
-	return &Service{store: store}
+func NewService(store *Store, seedFunc func() []Sale) *Service {
+	return &Service{
+		store:    store,
+		seedFunc: seedFunc,
+	}
 }
 
 func (s *Service) Create(sale Sale) Sale {
 	return s.store.Save(sale)
+}
+
+func (s *Service) Clear() {
+
+	s.store.Clear()
+}
+
+func (s *Service) Seed() {
+
+	s.store.Clear()
+
+	for _, sale := range s.seedFunc() {
+
+		s.store.Save(sale)
+	}
 }
 
 func (s *Service) TotalVolume() TotalVolume {

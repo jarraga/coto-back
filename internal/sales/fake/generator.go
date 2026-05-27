@@ -14,11 +14,9 @@ const (
 	maxUnitsPerSale   = 5
 )
 
-func SeedStore(store *sales.Store) {
-
-	store.Clear()
-
+func GenerateSales() []sales.Sale {
 	salesCount := randomBetween(minSeedSalesCount, maxSeedSalesCount)
+	generatedSales := make([]sales.Sale, 0, salesCount)
 
 	for i := 0; i < salesCount; i++ {
 
@@ -36,8 +34,10 @@ func SeedStore(store *sales.Store) {
 			CreatedAt:          time.Now().UTC(),
 		}
 
-		store.Save(sale)
+		generatedSales = append(generatedSales, sale)
 	}
+
+	return generatedSales
 }
 
 func RandomModel() sales.CarModel {

@@ -24,9 +24,8 @@ func main() {
 	addr := ":" + port
 
 	store := sales.NewStore()
-	fake.SeedStore(store)
-
-	service := sales.NewService(store)
+	service := sales.NewService(store, fake.GenerateSales)
+	service.Seed()
 
 	r := router.New(service)
 

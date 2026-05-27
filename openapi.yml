@@ -8,6 +8,7 @@ servers:
 tags:
   - name: Health
   - name: Sales
+  - name: Operations
 paths:
   /:
     get:
@@ -138,6 +139,34 @@ paths:
                       SUV:
                         units: 2
                         percentage: 50
+  /ops/store:
+    delete:
+      tags:
+        - Operations
+      summary: Clear the in-memory store
+      responses:
+        "200":
+          description: Store cleared
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationResponse"
+              example:
+                status: store cleared
+  /ops/store/seed:
+    post:
+      tags:
+        - Operations
+      summary: Clear the store and generate fake sales again
+      responses:
+        "200":
+          description: Store seeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationResponse"
+              example:
+                status: store seeded
 components:
   schemas:
     HealthResponse:
@@ -295,4 +324,11 @@ components:
         - error
       properties:
         error:
+          type: string
+    OperationResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
           type: string
