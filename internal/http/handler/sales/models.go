@@ -29,9 +29,12 @@ type totalVolumeResponse struct {
 }
 
 type centerVolumeResponse struct {
-	DistributionCenter string `json:"distributionCenter"`
-	Units              int    `json:"units"`
-	TotalAmount        int    `json:"totalAmount"`
+	Centers map[string]centerVolumeDetail `json:"centers"`
+}
+
+type centerVolumeDetail struct {
+	Units       int `json:"units"`
+	TotalAmount int `json:"totalAmount"`
 }
 
 type centerModelPercentageResponse struct {
@@ -68,18 +71,20 @@ func newTotalVolumeResponse(volume sales.TotalVolume) totalVolumeResponse {
 	}
 }
 
-func newCenterVolumeResponses(volumes []sales.CenterVolume) []centerVolumeResponse {
-	responses := make([]centerVolumeResponse, 0, len(volumes))
-
-	for _, volume := range volumes {
-		responses = append(responses, centerVolumeResponse{
-			DistributionCenter: string(volume.DistributionCenter),
-			Units:              volume.Units,
-			TotalAmount:        centsToAmount(volume.TotalCents),
-		})
+func newCenterVolumeResponse(volumes []sales.CenterVolume) centerVolumeResponse {
+	response := centerVolumeResponse{
+		Centers: make(map[string]centerVolumeDetail),
 	}
 
-	return responses
+	for _, volume := range volumes {
+		center := string(volume.DistributionCenter)
+		response.Centers[center] = centerVolumeDetail{
+			Units:       volume.Units,
+			TotalAmount: centsToAmount(volume.TotalCents),
+		}
+	}
+
+	return response
 }
 
 func newCenterModelPercentageResponse(percentages []sales.CenterModelPercentage) centerModelPercentageResponse {

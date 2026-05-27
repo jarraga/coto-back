@@ -99,16 +99,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CenterVolumeResponse"
+                $ref: "#/components/schemas/CenterVolumeResponse"
               example:
-                - distributionCenter: north
-                  units: 4
-                  totalAmount: 77896
-                - distributionCenter: south
-                  units: 0
-                  totalAmount: 0
+                centers:
+                  north:
+                    units: 4
+                    totalAmount: 77896
+                  south:
+                    units: 0
+                    totalAmount: 0
   /sales/model-percentages/by-center:
     get:
       tags:
@@ -233,17 +232,18 @@ components:
     CenterVolumeResponse:
       type: object
       required:
-        - distributionCenter
+        - centers
+      properties:
+        centers:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/CenterVolumeDetail"
+    CenterVolumeDetail:
+      type: object
+      required:
         - units
         - totalAmount
       properties:
-        distributionCenter:
-          type: string
-          enum:
-            - north
-            - south
-            - east
-            - west
         units:
           type: integer
           example: 4

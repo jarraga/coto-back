@@ -73,7 +73,7 @@ func (h Handler) TotalVolume(w http.ResponseWriter, r *http.Request) {
 func (h Handler) VolumeByCenter(w http.ResponseWriter, r *http.Request) {
 	volumes := h.service.VolumeByCenter()
 
-	httphelper.JSON(w, http.StatusOK, newCenterVolumeResponses(volumes))
+	httphelper.JSON(w, http.StatusOK, newCenterVolumeResponse(volumes))
 }
 
 func (h Handler) ModelPercentagesByCenter(w http.ResponseWriter, r *http.Request) {
