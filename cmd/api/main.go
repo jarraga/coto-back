@@ -14,7 +14,7 @@ import (
 
 func main() {
 
-	// lectura de .env para desarrollo
+	// Load .env for local development.
 	_ = godotenv.Load()
 
 	port := os.Getenv("PORT")
@@ -29,6 +29,6 @@ func main() {
 
 	r := router.New(service)
 
-	log.Printf("App corriendo en http://localhost%s", addr)
+	log.Printf("App running at http://localhost%s", addr)
 	log.Fatal(http.ListenAndServe(addr, r))
 }

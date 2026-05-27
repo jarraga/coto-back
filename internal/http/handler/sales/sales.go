@@ -29,7 +29,7 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 	model := sales.CarModel(request.Model)
 	unitPriceCents, ok := sales.UnitPriceCents(model)
 	if !ok {
-		// con esto ya verificamos que sea un modelo válido
+		// UnitPriceCents also validates the car model.
 		message := fmt.Sprintf("invalid model, only these values are allowed: %s", allowedModels())
 		httphelper.Error(w, http.StatusBadRequest, message)
 		return

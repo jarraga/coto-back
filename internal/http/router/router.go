@@ -30,5 +30,7 @@ func New(service *sales.Service) http.Handler {
 	r.Get("/sales/volume/by-center", salesHandler.VolumeByCenter)
 	r.Get("/sales/model-percentages/by-center", salesHandler.ModelPercentagesByCenter)
 
+	PrintAvailableRoutes(r)
+
 	return r
 }
