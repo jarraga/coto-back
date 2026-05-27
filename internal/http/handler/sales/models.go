@@ -34,6 +34,21 @@ type centerVolumeResponse struct {
 	TotalAmount        int    `json:"totalAmount"`
 }
 
+type centerModelPercentageResponse struct {
+	TotalUnits int                                      `json:"totalUnits"`
+	Centers    map[string]centerModelPercentageByCenter `json:"centers"`
+}
+
+type centerModelPercentageByCenter struct {
+	TotalUnits int                                     `json:"totalUnits"`
+	Models     map[string]centerModelPercentageByModel `json:"models"`
+}
+
+type centerModelPercentageByModel struct {
+	Units      int     `json:"units"`
+	Percentage float64 `json:"percentage"`
+}
+
 func newSaleResponse(sale sales.Sale) saleResponse {
 	return saleResponse{
 		ID:                 sale.ID,
@@ -65,6 +80,33 @@ func newCenterVolumeResponses(volumes []sales.CenterVolume) []centerVolumeRespon
 	}
 
 	return responses
+}
+
+func newCenterModelPercentageResponse(percentages []sales.CenterModelPercentage) centerModelPercentageResponse {
+	response := centerModelPercentageResponse{
+		Centers: make(map[string]centerModelPercentageByCenter),
+	}
+
+	for _, percentage := range percentages {
+		center := string(percentage.DistributionCenter)
+		model := string(percentage.Model)
+		centerDetail := response.Centers[center]
+
+		if centerDetail.Models == nil {
+			centerDetail.Models = make(map[string]centerModelPercentageByModel)
+		}
+
+		centerDetail.TotalUnits += percentage.Units
+		centerDetail.Models[model] = centerModelPercentageByModel{
+			Units:      percentage.Units,
+			Percentage: percentage.Percentage,
+		}
+
+		response.TotalUnits += percentage.Units
+		response.Centers[center] = centerDetail
+	}
+
+	return response
 }
 
 func centsToAmount(cents int) int {

@@ -23,6 +23,7 @@ func New(service *sales.Service) http.Handler {
 	r.Post("/sales", salesHandler.Create)
 	r.Get("/sales/volume", salesHandler.TotalVolume)
 	r.Get("/sales/volume/by-center", salesHandler.VolumeByCenter)
+	r.Get("/sales/model-percentages/by-center", salesHandler.ModelPercentagesByCenter)
 
 	return r
 }

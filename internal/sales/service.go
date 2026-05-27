@@ -48,3 +48,41 @@ func (s *Service) VolumeByCenter() []CenterVolume {
 
 	return volumes
 }
+
+func (s *Service) ModelPercentagesByCenter() []CenterModelPercentage {
+	storedSales := s.store.FindAll()
+	totalUnits := 0
+	unitsByCenterAndModel := make(map[DistributionCenter]map[CarModel]int)
+
+	for _, center := range DistributionCenters() {
+		unitsByCenterAndModel[center] = make(map[CarModel]int)
+	}
+
+	for _, sale := range storedSales {
+		totalUnits += sale.Units
+		unitsByCenterAndModel[sale.DistributionCenter][sale.Model] += sale.Units
+	}
+
+	percentages := make([]CenterModelPercentage, 0, len(DistributionCenters())*len(Models()))
+	for _, center := range DistributionCenters() {
+		for _, model := range Models() {
+			units := unitsByCenterAndModel[center][model]
+			percentages = append(percentages, CenterModelPercentage{
+				DistributionCenter: center,
+				Model:              model,
+				Units:              units,
+				Percentage:         percentage(units, totalUnits),
+			})
+		}
+	}
+
+	return percentages
+}
+
+func percentage(units int, total int) float64 {
+	if total == 0 {
+		return 0
+	}
+
+	return (float64(units) / float64(total)) * 100
+}

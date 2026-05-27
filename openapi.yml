@@ -109,6 +109,36 @@ paths:
                 - distributionCenter: south
                   units: 0
                   totalAmount: 0
+  /sales/model-percentages/by-center:
+    get:
+      tags:
+        - Sales
+      summary: Get model unit percentages by distribution center
+      responses:
+        "200":
+          description: Percentage of units sold for each model and center over total sold units
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CenterModelPercentageResponse"
+              example:
+                totalUnits: 4
+                centers:
+                  north:
+                    totalUnits: 2
+                    models:
+                      Sport:
+                        units: 2
+                        percentage: 50
+                      Sedan:
+                        units: 0
+                        percentage: 0
+                  south:
+                    totalUnits: 2
+                    models:
+                      SUV:
+                        units: 2
+                        percentage: 50
 components:
   schemas:
     HealthResponse:
@@ -220,6 +250,45 @@ components:
         totalAmount:
           type: integer
           example: 77896
+    CenterModelPercentageResponse:
+      type: object
+      required:
+        - totalUnits
+        - centers
+      properties:
+        totalUnits:
+          type: integer
+          example: 4
+        centers:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/CenterModelPercentageDetail"
+    CenterModelPercentageDetail:
+      type: object
+      required:
+        - totalUnits
+        - models
+      properties:
+        totalUnits:
+          type: integer
+          example: 2
+        models:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/ModelPercentageDetail"
+    ModelPercentageDetail:
+      type: object
+      required:
+        - units
+        - percentage
+      properties:
+        units:
+          type: integer
+          example: 2
+        percentage:
+          type: number
+          format: double
+          example: 50
     ErrorResponse:
       type: object
       required:
