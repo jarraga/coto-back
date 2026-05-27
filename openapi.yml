@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: COTO Go API
+  version: 0.1.0
+  description: REST API for managing mocked car sales.
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Health
+  - name: Sales
+paths:
+  /:
+    get:
+      tags:
+        - Health
+      summary: Check API health
+      responses:
+        "200":
+          description: API is running
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              example:
+                status: ok
+                executionTime: 10s
+  /sales:
+    post:
+      tags:
+        - Sales
+      summary: Create a sale
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSaleRequest"
+            example:
+              model: Sport
+              distributionCenter: north
+              units: 2
+      responses:
+        "201":
+          description: Sale created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaleResponse"
+              example:
+                id: 1
+                model: Sport
+                distributionCenter: north
+                units: 2
+                unitPriceCents: 1947400
+                totalCents: 3894800
+                createdAt: "2026-05-27T18:00:00Z"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                invalidJson:
+                  value:
+                    error: invalid JSON body
+                invalidModel:
+                  value:
+                    error: "invalid model, only these values are allowed: Sedan, SUV, Offroad, Sport"
+                invalidDistributionCenter:
+                  value:
+                    error: "invalid distribution center, only these values are allowed: north, south, east, west"
+                invalidUnits:
+                  value:
+                    error: units must be greater than zero
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - executionTime
+      properties:
+        status:
+          type: string
+          example: ok
+        executionTime:
+          type: string
+          example: 10s
+    CreateSaleRequest:
+      type: object
+      required:
+        - model
+        - distributionCenter
+        - units
+      properties:
+        model:
+          type: string
+          enum:
+            - Sedan
+            - SUV
+            - Offroad
+            - Sport
+        distributionCenter:
+          type: string
+          enum:
+            - north
+            - south
+            - east
+            - west
+        units:
+          type: integer
+          minimum: 1
+          example: 2
+    SaleResponse:
+      type: object
+      required:
+        - id
+        - model
+        - distributionCenter
+        - units
+        - unitPriceCents
+        - totalCents
+        - createdAt
+      properties:
+        id:
+          type: integer
+          example: 1
+        model:
+          type: string
+          enum:
+            - Sedan
+            - SUV
+            - Offroad
+            - Sport
+        distributionCenter:
+          type: string
+          enum:
+            - north
+            - south
+            - east
+            - west
+        units:
+          type: integer
+          example: 2
+        unitPriceCents:
+          type: integer
+          example: 1947400
+        totalCents:
+          type: integer
+          example: 3894800
+        createdAt:
+          type: string
+          format: date-time
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
