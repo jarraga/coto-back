@@ -56,6 +56,16 @@ func DistributionCenters() []DistributionCenter {
 	return []DistributionCenter{CenterNorth, CenterSouth, CenterEast, CenterWest}
 }
 
+func IsValidDistributionCenter(center DistributionCenter) bool {
+	for _, validCenter := range DistributionCenters() {
+		if center == validCenter {
+			return true
+		}
+	}
+
+	return false
+}
+
 func UnitPriceCents(model CarModel) (int, bool) {
 
 	sportBasePrice := 1820000

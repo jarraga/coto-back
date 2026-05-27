@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"coto-back/internal/http/router"
+	"coto-back/internal/sales"
 
 	"github.com/joho/godotenv"
 )
@@ -21,7 +22,8 @@ func main() {
 	}
 
 	addr := ":" + port
-	r := router.New()
+	store := sales.NewStore()
+	r := router.New(store)
 
 	log.Printf("App corriendo en http://localhost%s", addr)
 	log.Fatal(http.ListenAndServe(addr, r))

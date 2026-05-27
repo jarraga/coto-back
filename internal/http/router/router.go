@@ -3,17 +3,22 @@ package router
 import (
 	"net/http"
 
-	"coto-back/internal/http/handler"
+	"coto-back/internal/http/handler/health"
+	saleshandler "coto-back/internal/http/handler/sales"
+	"coto-back/internal/sales"
 
 	"github.com/go-chi/chi/v5"
 )
 
-func New() http.Handler {
+func New(store *sales.Store) http.Handler {
 
 	r := chi.NewRouter()
 
-	healthHandler := handler.NewHealthHandler()
+	healthHandler := health.NewHandler()
 	r.Get("/", healthHandler.Check)
+
+	salesHandler := saleshandler.NewHandler(store)
+	r.Post("/sales", salesHandler.Create)
 
 	return r
 }
