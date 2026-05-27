@@ -1,0 +1,38 @@
+temp/
+
+# Binaries and build outputs
+bin/
+build/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go test and coverage
+*.test
+coverage.out
+coverage.html
+*.coverprofile
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Dependency/vendor cache
+vendor/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
