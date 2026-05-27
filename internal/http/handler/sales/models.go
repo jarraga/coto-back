@@ -28,6 +28,12 @@ type totalVolumeResponse struct {
 	TotalAmount int `json:"totalAmount"`
 }
 
+type centerVolumeResponse struct {
+	DistributionCenter string `json:"distributionCenter"`
+	Units              int    `json:"units"`
+	TotalAmount        int    `json:"totalAmount"`
+}
+
 func newSaleResponse(sale sales.Sale) saleResponse {
 	return saleResponse{
 		ID:                 sale.ID,
@@ -45,6 +51,20 @@ func newTotalVolumeResponse(volume sales.TotalVolume) totalVolumeResponse {
 		Units:       volume.Units,
 		TotalAmount: centsToAmount(volume.TotalCents),
 	}
+}
+
+func newCenterVolumeResponses(volumes []sales.CenterVolume) []centerVolumeResponse {
+	responses := make([]centerVolumeResponse, 0, len(volumes))
+
+	for _, volume := range volumes {
+		responses = append(responses, centerVolumeResponse{
+			DistributionCenter: string(volume.DistributionCenter),
+			Units:              volume.Units,
+			TotalAmount:        centsToAmount(volume.TotalCents),
+		})
+	}
+
+	return responses
 }
 
 func centsToAmount(cents int) int {

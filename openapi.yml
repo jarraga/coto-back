@@ -88,6 +88,27 @@ paths:
               example:
                 units: 10
                 totalAmount: 194740
+  /sales/volume/by-center:
+    get:
+      tags:
+        - Sales
+      summary: Get sales volume by distribution center
+      responses:
+        "200":
+          description: Sales volume grouped by distribution center
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CenterVolumeResponse"
+              example:
+                - distributionCenter: north
+                  units: 4
+                  totalAmount: 77896
+                - distributionCenter: south
+                  units: 0
+                  totalAmount: 0
 components:
   schemas:
     HealthResponse:
@@ -179,6 +200,26 @@ components:
         totalAmount:
           type: integer
           example: 194740
+    CenterVolumeResponse:
+      type: object
+      required:
+        - distributionCenter
+        - units
+        - totalAmount
+      properties:
+        distributionCenter:
+          type: string
+          enum:
+            - north
+            - south
+            - east
+            - west
+        units:
+          type: integer
+          example: 4
+        totalAmount:
+          type: integer
+          example: 77896
     ErrorResponse:
       type: object
       required:

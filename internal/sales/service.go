@@ -23,3 +23,28 @@ func (s *Service) TotalVolume() TotalVolume {
 
 	return volume
 }
+
+func (s *Service) VolumeByCenter() []CenterVolume {
+	storedSales := s.store.FindAll()
+	volumesByCenter := make(map[DistributionCenter]CenterVolume)
+
+	for _, center := range DistributionCenters() {
+		volumesByCenter[center] = CenterVolume{
+			DistributionCenter: center,
+		}
+	}
+
+	for _, sale := range storedSales {
+		volume := volumesByCenter[sale.DistributionCenter]
+		volume.Units += sale.Units
+		volume.TotalCents += sale.TotalCents
+		volumesByCenter[sale.DistributionCenter] = volume
+	}
+
+	volumes := make([]CenterVolume, 0, len(volumesByCenter))
+	for _, center := range DistributionCenters() {
+		volumes = append(volumes, volumesByCenter[center])
+	}
+
+	return volumes
+}

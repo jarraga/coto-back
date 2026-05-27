@@ -69,3 +69,9 @@ func (h Handler) TotalVolume(w http.ResponseWriter, r *http.Request) {
 
 	httphelper.JSON(w, http.StatusOK, newTotalVolumeResponse(volume))
 }
+
+func (h Handler) VolumeByCenter(w http.ResponseWriter, r *http.Request) {
+	volumes := h.service.VolumeByCenter()
+
+	httphelper.JSON(w, http.StatusOK, newCenterVolumeResponses(volumes))
+}

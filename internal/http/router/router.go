@@ -22,6 +22,7 @@ func New(service *sales.Service) http.Handler {
 	salesHandler := saleshandler.NewHandler(service)
 	r.Post("/sales", salesHandler.Create)
 	r.Get("/sales/volume", salesHandler.TotalVolume)
+	r.Get("/sales/volume/by-center", salesHandler.VolumeByCenter)
 
 	return r
 }
