@@ -37,3 +37,12 @@ func (s *Store) FindAll() []Sale {
 
 	return copiedSales
 }
+
+func (s *Store) Clear() {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.nextID = 1
+	s.sales = make([]Sale, 0)
+}

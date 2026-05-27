@@ -7,6 +7,7 @@ import (
 
 	"coto-back/internal/http/router"
 	"coto-back/internal/sales"
+	"coto-back/internal/sales/fake"
 
 	"github.com/joho/godotenv"
 )
@@ -23,6 +24,8 @@ func main() {
 	addr := ":" + port
 
 	store := sales.NewStore()
+	fake.SeedStore(store)
+
 	service := sales.NewService(store)
 
 	r := router.New(service)
