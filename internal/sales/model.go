@@ -21,7 +21,7 @@ const (
 )
 
 type Sale struct {
-	ID                 string
+	ID                 int
 	Model              CarModel
 	DistributionCenter DistributionCenter
 	Units              int
