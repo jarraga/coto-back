@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func New(store *sales.Store) http.Handler {
+func New(service *sales.Service) http.Handler {
 
 	r := chi.NewRouter()
 	r.Use(mw.RequestTime)
@@ -19,8 +19,9 @@ func New(store *sales.Store) http.Handler {
 	healthHandler := health.NewHandler()
 	r.Get("/", healthHandler.Check)
 
-	salesHandler := saleshandler.NewHandler(store)
+	salesHandler := saleshandler.NewHandler(service)
 	r.Post("/sales", salesHandler.Create)
+	r.Get("/sales/volume", salesHandler.TotalVolume)
 
 	return r
 }

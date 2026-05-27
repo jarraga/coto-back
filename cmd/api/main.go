@@ -20,10 +20,12 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-
 	addr := ":" + port
+
 	store := sales.NewStore()
-	r := router.New(store)
+	service := sales.NewService(store)
+
+	r := router.New(service)
 
 	log.Printf("App corriendo en http://localhost%s", addr)
 	log.Fatal(http.ListenAndServe(addr, r))

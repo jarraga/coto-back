@@ -18,9 +18,14 @@ type saleResponse struct {
 	Model              string `json:"model"`
 	DistributionCenter string `json:"distributionCenter"`
 	Units              int    `json:"units"`
-	UnitPriceCents     int    `json:"unitPriceCents"`
-	TotalCents         int    `json:"totalCents"`
+	UnitPriceAmount    int    `json:"unitPriceAmount"`
+	TotalAmount        int    `json:"totalAmount"`
 	CreatedAt          string `json:"createdAt"`
+}
+
+type totalVolumeResponse struct {
+	Units       int `json:"units"`
+	TotalAmount int `json:"totalAmount"`
 }
 
 func newSaleResponse(sale sales.Sale) saleResponse {
@@ -29,10 +34,21 @@ func newSaleResponse(sale sales.Sale) saleResponse {
 		Model:              string(sale.Model),
 		DistributionCenter: string(sale.DistributionCenter),
 		Units:              sale.Units,
-		UnitPriceCents:     sale.UnitPriceCents,
-		TotalCents:         sale.TotalCents,
+		UnitPriceAmount:    centsToAmount(sale.UnitPriceCents),
+		TotalAmount:        centsToAmount(sale.TotalCents),
 		CreatedAt:          sale.CreatedAt.Format(time.RFC3339),
 	}
+}
+
+func newTotalVolumeResponse(volume sales.TotalVolume) totalVolumeResponse {
+	return totalVolumeResponse{
+		Units:       volume.Units,
+		TotalAmount: centsToAmount(volume.TotalCents),
+	}
+}
+
+func centsToAmount(cents int) int {
+	return cents / 100
 }
 
 func allowedModels() string {

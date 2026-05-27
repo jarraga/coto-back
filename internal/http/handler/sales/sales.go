@@ -11,11 +11,11 @@ import (
 )
 
 type Handler struct {
-	store *sales.Store
+	service *sales.Service
 }
 
-func NewHandler(store *sales.Store) Handler {
-	return Handler{store: store}
+func NewHandler(service *sales.Service) Handler {
+	return Handler{service: service}
 }
 
 func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +59,13 @@ func (h Handler) Create(w http.ResponseWriter, r *http.Request) {
 		CreatedAt:          createdAt,
 	}
 
-	sale := h.store.Save(saleToSave)
+	sale := h.service.Create(saleToSave)
 
 	httphelper.JSON(w, http.StatusCreated, newSaleResponse(sale))
+}
+
+func (h Handler) TotalVolume(w http.ResponseWriter, r *http.Request) {
+	volume := h.service.TotalVolume()
+
+	httphelper.JSON(w, http.StatusOK, newTotalVolumeResponse(volume))
 }

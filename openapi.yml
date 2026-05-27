@@ -51,8 +51,8 @@ paths:
                 model: Sport
                 distributionCenter: north
                 units: 2
-                unitPriceCents: 1947400
-                totalCents: 3894800
+                unitPriceAmount: 19474
+                totalAmount: 38948
                 createdAt: "2026-05-27T18:00:00Z"
         "400":
           description: Invalid request
@@ -73,6 +73,21 @@ paths:
                 invalidUnits:
                   value:
                     error: units must be greater than zero
+  /sales/volume:
+    get:
+      tags:
+        - Sales
+      summary: Get total sales volume
+      responses:
+        "200":
+          description: Total sales volume
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TotalVolumeResponse"
+              example:
+                units: 10
+                totalAmount: 194740
 components:
   schemas:
     HealthResponse:
@@ -119,8 +134,8 @@ components:
         - model
         - distributionCenter
         - units
-        - unitPriceCents
-        - totalCents
+        - unitPriceAmount
+        - totalAmount
         - createdAt
       properties:
         id:
@@ -143,15 +158,27 @@ components:
         units:
           type: integer
           example: 2
-        unitPriceCents:
+        unitPriceAmount:
           type: integer
-          example: 1947400
-        totalCents:
+          example: 19474
+        totalAmount:
           type: integer
-          example: 3894800
+          example: 38948
         createdAt:
           type: string
           format: date-time
+    TotalVolumeResponse:
+      type: object
+      required:
+        - units
+        - totalAmount
+      properties:
+        units:
+          type: integer
+          example: 10
+        totalAmount:
+          type: integer
+          example: 194740
     ErrorResponse:
       type: object
       required:
