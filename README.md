@@ -56,6 +56,14 @@ PORT=8080
 
 ## Como Probar
 
+### 📘 Probar con Swagger
+
+Abrir Swagger Editor con el contrato cargado:
+
+```txt
+https://editor.swagger.io/?url=https://raw.githubusercontent.com/jarraga/coto-back/main/openapi.yml
+```
+
 Ver logs en vivo:
 
 ```bash
