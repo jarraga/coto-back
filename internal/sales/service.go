@@ -3,22 +3,29 @@ package sales
 type Service struct {
 	store    *Store
 	seedFunc func() []Sale
+	cache    *cache
 }
 
 func NewService(store *Store, seedFunc func() []Sale) *Service {
 	return &Service{
 		store:    store,
 		seedFunc: seedFunc,
+		cache:    newCache(),
 	}
 }
 
 func (s *Service) Create(sale Sale) Sale {
-	return s.store.Save(sale)
+
+	savedSale := s.store.Save(sale)
+	s.cache.Clear()
+
+	return savedSale
 }
 
 func (s *Service) Clear() {
 
 	s.store.Clear()
+	s.cache.Clear()
 }
 
 func (s *Service) Seed() {
@@ -29,9 +36,17 @@ func (s *Service) Seed() {
 
 		s.store.Save(sale)
 	}
+
+	s.cache.Clear()
 }
 
 func (s *Service) TotalVolume() TotalVolume {
+
+	cachedVolume, ok := s.cache.Get(cacheKeyTotalVolume)
+	if ok {
+		return cachedVolume.(TotalVolume)
+	}
+
 	storedSales := s.store.FindAll()
 
 	volume := TotalVolume{}
@@ -40,10 +55,17 @@ func (s *Service) TotalVolume() TotalVolume {
 		volume.TotalCents += sale.TotalCents
 	}
 
+	s.cache.Set(cacheKeyTotalVolume, volume)
 	return volume
 }
 
 func (s *Service) VolumeByCenter() []CenterVolume {
+
+	cachedVolumes, ok := s.cache.Get(cacheKeyVolumeByCenter)
+	if ok {
+		return cachedVolumes.([]CenterVolume)
+	}
+
 	storedSales := s.store.FindAll()
 	volumesByCenter := make(map[DistributionCenter]CenterVolume)
 
@@ -65,10 +87,17 @@ func (s *Service) VolumeByCenter() []CenterVolume {
 		volumes = append(volumes, volumesByCenter[center])
 	}
 
+	s.cache.Set(cacheKeyVolumeByCenter, volumes)
 	return volumes
 }
 
 func (s *Service) ModelPercentagesByCenter() []CenterModelPercentage {
+
+	cachedPercentages, ok := s.cache.Get(cacheKeyModelPercentagesByCenter)
+	if ok {
+		return cachedPercentages.([]CenterModelPercentage)
+	}
+
 	storedSales := s.store.FindAll()
 	totalUnits := 0
 	unitsByCenterAndModel := make(map[DistributionCenter]map[CarModel]int)
@@ -95,6 +124,7 @@ func (s *Service) ModelPercentagesByCenter() []CenterModelPercentage {
 		}
 	}
 
+	s.cache.Set(cacheKeyModelPercentagesByCenter, percentages)
 	return percentages
 }
 
