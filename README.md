@@ -3,7 +3,7 @@
 App live:
 
 ```txt
-https://example.com
+https://coto-app-89obl.ondigitalocean.app
 ```
 
 API REST para el ejercicio de ventas de una fabrica de automoviles. La app guarda ventas mockeadas en memoria y expone metricas agregadas.
@@ -59,13 +59,15 @@ PORT=8080
 Ver logs en vivo:
 
 ```bash
-curl -N https://example.com/logs/stream
+curl -N https://coto-app-89obl.ondigitalocean.app/logs/stream
 ```
+
+![logs](./docs/logs.png)
 
 Crear una venta:
 
 ```bash
-curl -X POST https://example.com/sales ^
+curl -X POST https://coto-app-89obl.ondigitalocean.app/sales ^
   -H "Content-Type: application/json" ^
   -d "{\"model\":\"Sport\",\"distributionCenter\":\"north\",\"units\":2}"
 ```
@@ -73,37 +75,37 @@ curl -X POST https://example.com/sales ^
 Obtener volumen total de ventas:
 
 ```bash
-curl https://example.com/sales/volume
+curl https://coto-app-89obl.ondigitalocean.app/sales/volume
 ```
 
 Obtener volumen de ventas por centro:
 
 ```bash
-curl https://example.com/sales/volume/by-center
+curl https://coto-app-89obl.ondigitalocean.app/sales/volume/by-center
 ```
 
 Obtener porcentajes por modelo y centro:
 
 ```bash
-curl https://example.com/sales/model-percentages/by-center
+curl https://coto-app-89obl.ondigitalocean.app/sales/model-percentages/by-center
 ```
 
 Borrar el store:
 
 ```bash
-curl -X DELETE https://example.com/ops/store
+curl -X DELETE https://coto-app-89obl.ondigitalocean.app/ops/store
 ```
 
 Regenerar ventas fake:
 
 ```bash
-curl -X POST https://example.com/ops/store/seed
+curl -X POST https://coto-app-89obl.ondigitalocean.app/ops/store/seed
 ```
 
 Health check:
 
 ```bash
-curl https://example.com/
+curl https://coto-app-89obl.ondigitalocean.app/
 ```
 
 ## Tests
