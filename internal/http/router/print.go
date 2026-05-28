@@ -2,13 +2,14 @@ package router
 
 import (
 	"fmt"
-	"log"
 	"net/http"
+
+	"coto-back/internal/logging"
 
 	"github.com/go-chi/chi/v5"
 )
 
-func PrintAvailableRoutes(routes chi.Routes) {
+func PrintAvailableRoutes(routes chi.Routes, logger *logging.Logger) {
 
 	fmt.Println()
 	fmt.Println("Available endpoints")
@@ -22,7 +23,7 @@ func PrintAvailableRoutes(routes chi.Routes) {
 	})
 	if err != nil {
 
-		log.Printf("error printing available routes: %v", err)
+		logger.Printf("error printing available routes: %v", err)
 	}
 
 	fmt.Println()

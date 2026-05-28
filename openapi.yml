@@ -9,6 +9,7 @@ tags:
   - name: Health
   - name: Sales
   - name: Operations
+  - name: Logs
 paths:
   /:
     get:
@@ -167,6 +168,21 @@ paths:
                 $ref: "#/components/schemas/OperationResponse"
               example:
                 status: store seeded
+  /logs/stream:
+    get:
+      tags:
+        - Logs
+      summary: Stream application logs as plain text
+      responses:
+        "200":
+          description: Plain text stream with new log lines
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |
+                2026/05/27 19:40:05 POST /sales completed in 1ms with status 201
+
 components:
   schemas:
     HealthResponse:

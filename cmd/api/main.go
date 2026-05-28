@@ -1,11 +1,11 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"os"
 
 	"coto-back/internal/http/router"
+	"coto-back/internal/logging"
 	"coto-back/internal/sales"
 	"coto-back/internal/sales/fake"
 
@@ -13,6 +13,8 @@ import (
 )
 
 func main() {
+
+	logger := logging.New()
 
 	// Load .env for local development.
 	_ = godotenv.Load()
@@ -27,8 +29,8 @@ func main() {
 	service := sales.NewService(store, fake.GenerateSales)
 	service.Seed()
 
-	r := router.New(service)
+	r := router.New(service, logger)
 
-	log.Printf("App running at http://localhost%s", addr)
-	log.Fatal(http.ListenAndServe(addr, r))
+	logger.Printf("App running at http://localhost%s", addr)
+	logger.Printf("%v", http.ListenAndServe(addr, r))
 }

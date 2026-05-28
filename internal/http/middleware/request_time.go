@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
+
+	"coto-back/internal/logging"
 )
 
 const requestDurationHeader = "X-Request-Duration"
@@ -34,6 +35,18 @@ func (w *responseWriter) Write(body []byte) (int, error) {
 	return w.ResponseWriter.Write(body)
 }
 
+func (w *responseWriter) Flush() {
+
+	w.writeHeader()
+
+	flusher, ok := w.ResponseWriter.(http.Flusher)
+	if !ok {
+		return
+	}
+
+	flusher.Flush()
+}
+
 func (w *responseWriter) writeHeader() {
 	if w.headerWritten {
 		return
@@ -45,26 +58,29 @@ func (w *responseWriter) writeHeader() {
 	w.headerWritten = true
 }
 
-func RequestTime(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func RequestTime(logger *logging.Logger) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
 
-		start := time.Now()
-		responseWriter := newResponseWriter(w, start)
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		next.ServeHTTP(responseWriter, r)
-		responseWriter.writeHeader()
+			start := time.Now()
+			responseWriter := newResponseWriter(w, start)
 
-		duration := time.Since(start)
-		formattedDuration := formatRequestDuration(duration)
+			next.ServeHTTP(responseWriter, r)
+			responseWriter.writeHeader()
 
-		log.Printf(
-			"%s %s completed in %s with status %d",
-			r.Method,
-			r.URL.Path,
-			formattedDuration,
-			responseWriter.statusCode,
-		)
-	})
+			duration := time.Since(start)
+			formattedDuration := formatRequestDuration(duration)
+
+			logger.Printf(
+				"%s %s completed in %s with status %d",
+				r.Method,
+				r.URL.Path,
+				formattedDuration,
+				responseWriter.statusCode,
+			)
+		})
+	}
 }
 
 func formatRequestDuration(duration time.Duration) string {
