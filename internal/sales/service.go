@@ -17,6 +17,7 @@ func NewService(store *Store, seedFunc func() []Sale) *Service {
 func (s *Service) Create(sale Sale) Sale {
 
 	savedSale := s.store.Save(sale)
+	// Aggregated reads are cached until the underlying sales data changes.
 	s.cache.Clear()
 
 	return savedSale
@@ -25,6 +26,7 @@ func (s *Service) Create(sale Sale) Sale {
 func (s *Service) Clear() {
 
 	s.store.Clear()
+	// Aggregated reads are cached until the underlying sales data changes.
 	s.cache.Clear()
 }
 
@@ -37,6 +39,7 @@ func (s *Service) Seed() {
 		s.store.Save(sale)
 	}
 
+	// Aggregated reads are cached until the underlying sales data changes.
 	s.cache.Clear()
 }
 

@@ -12,11 +12,29 @@ import (
 	"coto-back/internal/sales"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 )
 
 func New(service *sales.Service, logger *logging.Logger) http.Handler {
 
 	r := chi.NewRouter()
+
+	// Allow Swagger Editor to execute requests against the deployed API.
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins: []string{"https://editor.swagger.io"},
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodDelete,
+			http.MethodOptions,
+		},
+		AllowedHeaders: []string{
+			"Accept",
+			"Content-Type",
+		},
+		ExposedHeaders: []string{"X-Request-Duration"},
+		MaxAge:         300,
+	}))
 	r.Use(mw.RequestTime(logger))
 
 	healthHandler := health.NewHandler()

@@ -74,7 +74,8 @@ func UnitPriceCents(model CarModel) (int, bool) {
 		ModelSedan:   800000,
 		ModelSUV:     950000,
 		ModelOffroad: 1250000,
-		ModelSport:   sportBasePrice + (sportBasePrice * 7 / 100),
+		// Sport includes the extra 7% tax required by the exercise.
+		ModelSport: sportBasePrice + (sportBasePrice * 7 / 100),
 	}
 
 	price, ok := prices[model]
