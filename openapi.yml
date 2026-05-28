@@ -4,6 +4,7 @@ info:
   version: 0.1.0
   description: REST API for managing mocked car sales.
 servers:
+  - url: https://coto-app-89obl.ondigitalocean.app
   - url: http://localhost:8080
 tags:
   - name: Health
@@ -19,6 +20,9 @@ paths:
       responses:
         "200":
           description: API is running
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             application/json:
               schema:
@@ -44,6 +48,9 @@ paths:
       responses:
         "201":
           description: Sale created
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             application/json:
               schema:
@@ -58,6 +65,9 @@ paths:
                 createdAt: "2026-05-27T18:00:00Z"
         "400":
           description: Invalid request
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             application/json:
               schema:
@@ -83,6 +93,9 @@ paths:
       responses:
         "200":
           description: Total sales volume
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             application/json:
               schema:
@@ -98,6 +111,9 @@ paths:
       responses:
         "200":
           description: Sales volume grouped by distribution center
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             application/json:
               schema:
@@ -118,6 +134,9 @@ paths:
       responses:
         "200":
           description: Percentage of units sold for each model and center over total sold units
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             application/json:
               schema:
@@ -148,6 +167,9 @@ paths:
       responses:
         "200":
           description: Store cleared
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             application/json:
               schema:
@@ -162,6 +184,9 @@ paths:
       responses:
         "200":
           description: Store seeded
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             application/json:
               schema:
@@ -176,6 +201,9 @@ paths:
       responses:
         "200":
           description: Plain text stream with new log lines
+          headers:
+            X-Request-Duration:
+              $ref: "#/components/headers/RequestDuration"
           content:
             text/plain:
               schema:
@@ -184,6 +212,12 @@ paths:
                 2026/05/27 19:40:05 POST /sales completed in 1ms with status 201
 
 components:
+  headers:
+    RequestDuration:
+      description: Time spent processing the request.
+      schema:
+        type: string
+        example: 500us
   schemas:
     HealthResponse:
       type: object
